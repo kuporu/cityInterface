@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--测试日志配置，日志都同意异步输出到指定文件-->
+<Configuration status="WARN" monitorInterval="300">
+    <properties>
+        <property name="LOG_HOME">D:/logs/pro</property>
+    </properties>
+    <Appenders>
+        <!--控制台输出，不需要-->
+        <!--        <Console name="Console" target="SYSTEM_OUT">-->
+        <!--            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />-->
+        <!--        </Console>-->
+
+        <!--info日志文件-->
+        <RollingRandomAccessFile name="InfoFile"
+                                 fileName="${LOG_HOME}/info.log"
+                                 filePattern="${LOG_HOME}/$${date:yyyy-MM}/info-%d{yyyy-MM-dd}-%i.log">
+            <Filters>
+                <ThresholdFilter level="warn" onMatch="DENY" onMismatch="NEUTRAL" />
+                <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY" />
+            </Filters>
+            <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="10 MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="20" />
+        </RollingRandomAccessFile>
+
+        <!--warn日志文件-->
+        <RollingRandomAccessFile name="WarnFile"
+                                 fileName="${LOG_HOME}/warn.log"
+                                 filePattern="${LOG_HOME}/$${date:yyyy-MM}/warn-%d{yyyy-MM-dd}-%i.log">
+            <Filters>
+                <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL" />
+                <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY" />
+            </Filters>
+            <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="10 MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="20" />
+        </RollingRandomAccessFile>
+
+        <!--error日志文件-->
+        <RollingRandomAccessFile name="ErrorFile"
+                                 fileName="${LOG_HOME}/error.log"
+                                 filePattern="${LOG_HOME}/$${date:yyyy-MM}/error-%d{yyyy-MM-dd}-%i.log">
+            <Filters>
+                <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY" />
+            </Filters>
+            <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="10 MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="20" />
+        </RollingRandomAccessFile>
+
+        <Async name="InfoAsync">
+            <AppenderRef ref="InfoFile" />
+        </Async>
+        <Async name="WarnAsync">
+            <AppenderRef ref="WarnFile" />
+        </Async>
+        <Async name="ErrorAsync">
+            <AppenderRef ref="ErrorFile" />
+        </Async>
+
+    </Appenders>
+
+    <Loggers>
+        <Root level="info">
+            <!--不需要控制台输出-->
+            <!--            <AppenderRef ref="Console" />-->
+            <AppenderRef ref="InfoAsync" />
+            <AppenderRef ref="WarnAsync" />
+            <AppenderRef ref="ErrorAsync" />
+        </Root>
+    </Loggers>
+</Configuration>

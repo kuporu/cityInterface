@@ -1,0 +1,26 @@
+server:
+  port: 8081
+spring:
+  datasource:
+    url: jdbc:mysql://121.4.79.150:3306/country?serverTimezone=Asia/Shanghai
+    username: remote
+    password: Hh209694!
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    #   配置监控统计拦截的filters
+    filters: stat
+  redis:
+    host: 121.4.79.150
+    port: 6379
+    database: 0
+    password: redis
+    timeout: 5000
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        max-wait: 1000ms
+        min-idle: 0
+logging:
+  config: classpath:log4j2-dev.xml
+

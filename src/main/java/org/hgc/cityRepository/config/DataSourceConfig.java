@@ -3,9 +3,12 @@ package org.hgc.cityRepository.config;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
+import com.alibaba.nacos.api.config.ConfigType;
+import com.alibaba.nacos.api.config.annotation.NacosConfigurationProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,13 +21,14 @@ import java.util.Map;
     Spring Boot配置druid数据源参考：https://blog.csdn.net/weixin_44943959/article/details/116278903
  */
 @Configuration
+@RefreshScope
 public class DataSourceConfig {
 
-    @ConfigurationProperties("spring.datasource")
-    @Bean
-    DataSource dataSource() {
-        return new DruidDataSource();
-    }
+//    @ConfigurationProperties("spring.datasource")
+//    @Bean
+//    DataSource dataSource() {
+//        return new DruidDataSource();
+//    }
 
     /**Druid 监视器配置===>访问http://localhost:8080/druid登录即可开始监控
      * Druid的servlet

@@ -1,15 +1,16 @@
 package org.hgc.cityRepository.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import org.hgc.cityRepository.error.APIException;
 import org.hgc.cityRepository.model.City;
 import org.hgc.cityRepository.repository.CityRepository;
 import org.hgc.cityRepository.service.AbstractQueryFromRedisQuery;
 import org.hgc.cityRepository.service.CityService;
-import org.hgc.cityRepository.service.AbstractQuery;
 import org.hgc.cityRepository.util.Callback;
 import org.hgc.cityRepository.util.HttpUtil;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -56,20 +57,22 @@ public class CityServiceImpl extends AbstractQueryFromRedisQuery<City> implement
     @Override
     protected String queryFromWeb(int... id) {
         final String[] res = new String[1];
-//        Instant beginTime = Instant.now();
         HttpUtil.request("http://guolin.tech/api/china/" + id[0], new Callback() {
             @Override
             public void onFailure(IOException e) {
-                e.getStackTrace();
+//                e.getStackTrace();
+                // 抛出自定义异常，由全局异常处理器捕获处理
+                throw new APIException("访问第三方城市数据出现异常");
             }
 
             @Override
             public void onResponse(String response) {
+                if (!StringUtils.hasText(response)) {
+                    throw new APIException("第三方中没有查询到市级数据");
+                }
                 res[0] = response;
             }
         });
-//        Instant endTime = Instant.now();
-//        logger.info("耗时(毫秒)：" + Duration.between(beginTime, endTime).toMillis());
 
         return res[0];
     }

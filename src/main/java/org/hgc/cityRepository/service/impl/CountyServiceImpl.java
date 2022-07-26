@@ -2,15 +2,16 @@ package org.hgc.cityRepository.service.impl;
 
 
 import com.alibaba.fastjson.JSON;
+import org.hgc.cityRepository.error.APIException;
 import org.hgc.cityRepository.model.County;
 import org.hgc.cityRepository.repository.CountyRepository;
 import org.hgc.cityRepository.service.AbstractQueryFromRedisQuery;
 import org.hgc.cityRepository.service.CountyService;
-import org.hgc.cityRepository.service.AbstractQuery;
 import org.hgc.cityRepository.util.Callback;
 import org.hgc.cityRepository.util.HttpUtil;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -55,11 +56,16 @@ public class CountyServiceImpl extends AbstractQueryFromRedisQuery<County> imple
         HttpUtil.request("http://guolin.tech/api/china/" + id[0] + "/" + id[1], new Callback() {
             @Override
             public void onFailure(IOException e) {
-                e.getStackTrace();
+//                e.getStackTrace();
+                // 抛出自定义异常，由全局异常处理器捕获并处理
+                throw new APIException("访问第三方县级数据出现异常");
             }
 
             @Override
             public void onResponse(String response) {
+                if (!StringUtils.hasText(response)) {
+                    throw new APIException("第三方中没有查询到县级数据");
+                }
                 res[0] = response;
             }
         });

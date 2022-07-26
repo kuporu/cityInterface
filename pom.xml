@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>org.hgc</groupId>
 	<artifactId>cityRepository</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<name>cityRepository</name>
 	<description>获取省、市、县信息</description>
 	<properties>

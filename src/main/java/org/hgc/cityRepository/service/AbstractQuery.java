@@ -2,11 +2,7 @@ package org.hgc.cityRepository.service;
 
 import org.hgc.cityRepository.service.Support.RedisKey;
 import org.hgc.cityRepository.service.Support.SimpleRedisKey;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
-import java.util.List;
 
 /*
 定义模板模式
@@ -38,34 +34,29 @@ public abstract class AbstractQuery<D> implements Query{
     @Override
     public String query(int count, int ...id) {
 
-        /*
-        查询Redis
-         */
+
+        // 查询Redis
         String redisKey = (String) getRedisKey().generateRedisKey(id);
         String queryFromRedis = queryFromRedis(redisKey);
         if (queryFromRedis != null) {
             return queryFromRedis;
         }
 
-        /*
-        查询数据库，以URL中最后一个id作为查询条件（主键）
-         */
+
+        // 查询数据库，以URL中最后一个id作为查询条件（主键）
         String queryFromDB = queryFromDB(id[id.length - 1]);
         if (queryFromDB != null) {
-            /*
-             放入redis
-             */
+
+            // 放入redis
             pushRedis(redisKey, queryFromDB);
             return queryFromDB;
         }
 
-        /*
-        查询网络
-         */
+
+        // 查询网络
         String queryFromWeb = queryFromWeb(id);
-        /*
-         放入数据库
-         */
+
+        // 放入数据库
         pushDB(queryFromWeb, id);
 
         // 放入redis

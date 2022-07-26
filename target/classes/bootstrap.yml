@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: cityRepository
+  profiles:
+    active: ${PROFILE}
+  cloud:
+    nacos:
+      config:
+        server-addr: ${REMOTE_HOST_PORT}
+        file-extension: yaml
+        namespace: 091273d8-0714-4bac-8ff9-758aee772e0f
+        group: CITYREPOSITORY_GROUP

@@ -4,6 +4,9 @@ import org.hgc.cityRepository.model.City;
 import org.hgc.cityRepository.model.County;
 import org.hgc.cityRepository.service.CityService;
 import org.hgc.cityRepository.service.CountyService;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,5 +108,17 @@ class CityRepositoryApplicationTests {
 		LOG.error("error test");
 		LOG.warn("warn test");
 		LOG.info("info test");
+	}
+
+	@Test
+	public void JSONParse () throws JSONException {
+		// json字符串
+		String jsonString1 = "{\"city\":[{\"cityName\":\"成都\"},{\"cityName\":\"绵阳\"}]}";
+		JSONObject jsonObject = new JSONObject(jsonString1);
+		JSONArray city = new JSONArray(jsonObject.getString("city"));
+
+		String jsonString2 = "{\"city\":\"[{\\\"cityName\\\":\\\"成都\\\"},{\\\"cityName\\\":\\\"绵阳\\\"}]\"}";
+		JSONObject jsonObject2 = new JSONObject(jsonString2);
+		JSONArray city2 = new JSONArray(jsonObject2.getString("city"));
 	}
 }
